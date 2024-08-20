@@ -1,0 +1,57 @@
+---
+import { fn_parse_date } from "../utils/parseDate";
+
+interface Props {
+  id: string;
+  name: string;
+  img: string;
+  success: boolean;
+  flightNumber: number;
+  details: string | null;
+  date: Date;
+}
+
+const { id, img, name, success, flightNumber, details, date } = Astro.props;
+
+const successText = success ? "Success!" : "Failure";
+
+const detailsText =
+  details !== null && details?.length > 100
+    ? details.slice(0, 100) + "..."
+    : details;
+---
+
+<a
+  href={`/launch/${id}`}
+  class="rounded-lg border shadow-md bg-gray-800 border-gray-700 hover:scale-105 hover:bg-gray-700 hover:border.gray-500 transition flex flex-col"
+>
+  <picture class="flex justify-center p-4">
+    <img class="mb-5 rounded-lg" src={img} alt={`Patch for launch ${id}`} />
+  </picture>
+
+  <header class="p-4 flex-grow">
+    <span
+      class:list={[
+        "text-xs font-semibold mr-2 px-2.5 py-0.5 rounded",
+        {
+          "bg-green-200 text-green-900": success,
+          "bg-red-200 text-red-900": !success,
+        },
+      ]}
+    >
+      {successText}
+    </span>
+
+    <h2 class="mt-2 mb-0 text-2xl font-bold tracking-tight text-white">
+      Flight #{flightNumber}
+    </h2>
+
+    <h3 class="mt-1 text-lg text-slate-400 font-semibold my-4">{name}</h3>
+
+    <span class="text-gray-400">{fn_parse_date(date.toString())}</span>
+
+    <p class="mb-4 font-light text-gray-400">
+      {detailsText}
+    </p>
+  </header>
+</a>
